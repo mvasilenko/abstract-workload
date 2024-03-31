@@ -17,6 +17,8 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"fmt"
+
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -65,4 +67,51 @@ type AbstractWorkloadList struct {
 
 func init() {
 	SchemeBuilder.Register(&AbstractWorkload{}, &AbstractWorkloadList{})
+}
+
+type WorkloadType string
+
+const (
+	Stateless WorkloadType = StrStateless
+	Stateful  WorkloadType = StrStateful
+)
+
+const (
+	StrStateless = "stateless"
+	StrStateful  = "stateful"
+)
+
+func (w WorkloadType) String() string {
+	switch w {
+	case Stateless:
+		return StrStateless
+	case Stateful:
+		return StrStateful
+	}
+	return ""
+}
+
+type CrossNamespaceObjectReference struct {
+	// API version of the referent.
+	// +optional
+	APIVersion string `json:"apiVersion,omitempty"`
+
+	// Kind of the referent.
+	// +required
+	Kind string `json:"kind"`
+
+	// Name of the referent.
+	// +required
+	Name string `json:"name"`
+
+	// Namespace of the referent, defaults to the namespace of the Kubernetes resource object that contains the reference.
+	// +optional
+	Namespace string `json:"namespace,omitempty"`
+}
+
+func (s *CrossNamespaceObjectReference) String() string {
+	if s.Namespace != "" {
+		return fmt.Sprintf("%s/%s/%s", s.Kind, s.Namespace, s.Name)
+	}
+	return fmt.Sprintf("%s/%s", s.Kind, s.Name)
 }
