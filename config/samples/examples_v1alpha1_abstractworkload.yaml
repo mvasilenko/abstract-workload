@@ -1,0 +1,9 @@
+apiVersion: examples.mvasilenko.me/v1alpha1
+kind: AbstractWorkload
+metadata:
+  labels:
+    app.kubernetes.io/name: abstract-workload
+    app.kubernetes.io/managed-by: kustomize
+  name: abstractworkload-sample
+spec:
+  # TODO(user): Add fields here
